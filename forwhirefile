@@ -1,0 +1,64 @@
+<?php
+
+if (isset($_POST["name"]) && isset($_POST["age"]) && isset($_POST["email"])
+    && isset($_POST["password"]) && isset($_POST["repeatpassword"])) {
+
+    // Массив для хранения ошибок
+    $resultContainer = array();
+    // Формируем массив для JSON ответа
+    $result = array(
+        'name' => $_POST["name"],
+        'age' => $_POST["age"],
+        'email' => $_POST["email"],
+        'password' => $_POST["password"],
+        'repeatpassword' => $_POST["repeatpassword"]
+    );
+// сравнение введенных паролей
+    if($result['password'] != $result['repeatpassword']) {
+        $resultContainer['repeatpassword'] = 'Пароли не совпадают';
+    }
+
+
+    $result['email'] = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+    if (! $result['email']) {
+        $resultContainer['email'] = "Введите правильный email";
+    }
+    // Переводим массив в JSON
+    // echo json_encode($result);
+
+//    $file = file_get_contents('users.txt');
+//    $filearray = explode(PHP_EOL, $file);
+//    foreach ($filearray as $value) {
+//        if (empty($value)) {
+//            continue;
+//        }
+//        $userItam = explode(' ', $value);
+//        if ($result['name'] === $userItam[1] && $result['email'] === $userItam[2]) {
+//            $resultContainer['name'] = 'Юзер уже существует';
+//            }
+//    }
+    if(empty($resultContainer)) {
+        $whiteusers = $conn->prepare('INSERT INTO ajax_form_users (name, email) values (:name, :email);');
+        $whiteusers->execute([':name' => $_POST["name"], ':email' => $_POST["email"]]);
+    }
+    // делаем ответ для клиента
+ //   if(empty($resultContainer)){
+        // если нет ошибок сообщаем об успехе
+//        $handle = fopen('users.txt', "a");
+//        $id = uniqid();
+//        fwrite($handle, $id . " " );
+//        fwrite($handle, $result['name'] . " ");
+//        fwrite($handle,$result['email'] . PHP_EOL );
+//        fclose($handle);
+//        $a = json_encode(array('result' => 'success', ''));
+
+   // }else{
+        // если есть ошибки то отправляем
+      //  $a = json_encode(array('result' => 'error', 'text_error' => $resultContainer));
+
+   // }
+
+}
+$whireLog = fopen('log.txt', "a");
+fwrite($whireLog, $a . PHP_EOL);
+echo $a;
